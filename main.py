@@ -69,7 +69,7 @@ from agent import DQNAgent
 # 'VizdoomCorridor-v0_Kill'
 # 'VizdoomCorridor-v0_Train'
 # 'VizdoomCorridor-v0_Test'
-USED_SET = 'VizdoomCorridor-v0_Test'
+USED_SET = 'VizdoomBasic-v0_Test'
 PARAM_SET = {
     'CartPole-v1_Train' : {
         'ENV': 'CartPole-v1',
