@@ -8,6 +8,8 @@ class DQNAgent():
     def __init__(self, out_features, lr=1e-3, batch_size=64, buffer_size=10000, update_method='soft', update_target_every=40, alpha=0.01,
                  gamma=0.9, greed_method='epsilon', epsilon_start=1.0, epsilon_end=1.0, epsilon_decay=0.995, tau=1, gpu=True, weight_file=None):
         
+        # On set tout les attribus
+        
         self.device = torch.device('cpu')
         if torch.cuda.is_available() and gpu:
             self.device = torch.device('cuda:0')
@@ -16,7 +18,7 @@ class DQNAgent():
         
         self._build_model(out_features)
         if weight_file is not None:
-            self.model.load_state_dict(torch.load(weight_file))
+            self.model.load_state_dict(torch.load(weight_file, map_location=lambda storage, loc: storage))
         self.model = self.model.to(self.device)
         self.target = copy.deepcopy(self.model)
             
@@ -42,6 +44,7 @@ class DQNAgent():
         
         
     def act(self, state, reward, done):
+        # On recupere l'input 
         input = torch.FloatTensor(self._preprocess_state(state)).unsqueeze(0).to(self.device)
         output = self.model(input)
         

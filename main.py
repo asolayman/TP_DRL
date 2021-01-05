@@ -19,16 +19,57 @@ from agent import DQNAgent
 
 #################################################################################
 ### HYPER-PARAMETRES
-# ENVIRONNEMENT
-# Nombre d'épisodes
-# Nombre max de step par épisode (Si l'environnement n'a pas déjà de limite)
+# ENV                   Nom de l'environnement
+# RESOLUTION            Résolution des images [Height, Width] (Utile qu'avec VizDoomGym)
+# LAST_STEP             Nombre d'étapes max de l'environnement (Mettre 100000 si non connu)
+# WEIGHT_FILE           Path du fichier de poids (None si auccun poids à fournir)
+# MONITOR               Si True l'execution est enregistrée tout les 10 ep, sinon non
+# USE_GPU               Si True utilise le GPU pour les calculs
+# 
+# TRAIN                 Si True passe par un entrainement
+# RENDER_TRAIN          Si True l'environnement est render pendant l'entrainement
+# NB_TRAIN_EPISODE      Nombre d'episodes à faire pendant l'entrainement
+# NB_MAX_TRAIN_STEP     Nombre max d'étapes à faire pendant l'entrainement par épisodes (Mettre 100000 si non connu)
+# 
+# TEST                  Si True passe par phase de test
+# RENDER_TEST           Si True l'environnement est render pendant la phase de test
+# NB_TEST_EPISODE       Nombre d'episodes à faire pendant la phase de test
+# NB_MAX_TEST_STEP      Nombre max d'étapes à faire pendant la phase de test par épisodes (Mettre 100000 si non connu)
+# 
+# LR                    Taux d'apprentissage
+# WEIGHT_DECAY          Valeur du weight decay    
+# BATCH_SIZE            Taille du batch
+# 
+# UPDATE_METHOD         Méthode d'update du dupliquata 'soft' = méthode avec alpha, 'hard' = deep copy
+# UPDATE_TARGET_EVERY   Si UPDATE_METHOD=='hard', le nombre d'itération avant la deep copy
+# ALPHA                 Si UPDATE_METHOD=='soft', la valeur d'alpha
+# 
+# GAMMA                 La valeur de gamma
+# 
+# BUFFER_SIZE           La taille de la mémoire de l'agent
+# 
+# GREED_METHOD          Méthode d'exploration, 'epsilon', 'boltzmann', ou 'none'
+# EPSILON_START         Si GREED_METHOD=='epsilon', valeur de epsilon au début
+# EPSILON_END           Si GREED_METHOD=='epsilon', valeur minimum de epsilon
+# EPSILON_DECAY         Si GREED_METHOD=='epsilon', valeur du decay
+# TAU                   Si GREED_METHOD=='boltzmann', valeur de tau
+#
+# STACK_FRAME           Si True utilise le frame stacking sinon non
+# STACK_SIZE            Si STACK_FRAME==True, nombre de framse à stack
 
-# AGENT
-# Taille du buffer d'épisode
-# Valeur initiale de epsilon (Pour l'exploration)
-# Valeur du decay de epsilon    
 
-USED_SET = 'VizdoomCorridor-v0_Train'  # 'VizdoomBasic-v0_ReTrain' / 'VizdoomBasic-v0_Test'
+
+## Possible values for USED_SET
+# 'CartPole-v1_Train'
+# 'CartPole-v1_Test'
+# 'VizdoomBasic-v0_Train'
+# 'VizdoomBasic-v0_Test'
+# 'VizdoomTakeCover-v0_Train'
+# 'VizdoomTakeCover-v0_Test'
+# 'VizdoomCorridor-v0_Kill'
+# 'VizdoomCorridor-v0_Train'
+# 'VizdoomCorridor-v0_Test'
+USED_SET = 'CartPole-v1_Test'
 PARAM_SET = {
     'CartPole-v1_Train' : {
         'ENV': 'CartPole-v1',
@@ -39,7 +80,7 @@ PARAM_SET = {
         
         'TRAIN': True,
         'RENDER_TRAIN': True,
-        'NB_TRAIN_EPISODE': 100,
+        'NB_TRAIN_EPISODE': 300,
         'NB_MAX_TRAIN_STEP': 10000,
         
         'TEST': False,
@@ -51,7 +92,7 @@ PARAM_SET = {
         'WEIGHT_DECAY': 1e-2,
         'BATCH_SIZE': 128,
 
-        'UPDATE_METHOD': 'soft',
+        'UPDATE_METHOD': 'hard',
         'UPDATE_TARGET_EVERY': 40,
         'ALPHA': 0.01,
 
@@ -69,16 +110,56 @@ PARAM_SET = {
         'STACK_SIZE': 0
     },
     
-    'VizdoomCorridor-v0_Train' : {
-        'ENV': 'VizdoomCorridor-v0',
-        'LAST_STEP': 2100,
+    'CartPole-v1_Test' : {
+        'ENV': 'CartPole-v1',
+        'LAST_STEP': 500,
+        'WEIGHT_FILE': 'best_networks/CartPole-v1_Best.pt',
+        'MONITOR': True,
+        'USE_GPU': False,
+        
+        'TRAIN': False,
+        'RENDER_TRAIN': True,
+        'NB_TRAIN_EPISODE': 100,
+        'NB_MAX_TRAIN_STEP': 10000,
+        
+        'TEST': True,
+        'RENDER_TEST': True,
+        'NB_TEST_EPISODE': 100,
+        'NB_MAX_TEST_STEP': 10000,
+        
+        'LR': 1e-3,
+        'WEIGHT_DECAY': 1e-2,
+        'BATCH_SIZE': 128,
+
+        'UPDATE_METHOD': 'hard',
+        'UPDATE_TARGET_EVERY': 40,
+        'ALPHA': 0.01,
+
+        'GAMMA': 0.999,
+        
+        'BUFFER_SIZE': 100000,
+
+        'GREED_METHOD': 'none',
+        'EPSILON_START': 0.05,
+        'EPSILON_END': 0.05,
+        'EPSILON_DECAY': 1.0,
+        'TAU': 1,
+        
+        'STACK_FRAME': False,
+        'STACK_SIZE': 0
+    },
+    
+    'VizdoomTakeCover-v0_Train' : {
+        'ENV': 'VizdoomTakeCover-v0',
+        'RESOLUTION': [60, 80],
+        'LAST_STEP': 100000,
         'WEIGHT_FILE': None,
         'MONITOR': True,
         'USE_GPU': True,
         
         'TRAIN': True,
         'RENDER_TRAIN': False,
-        'NB_TRAIN_EPISODE': 401,
+        'NB_TRAIN_EPISODE': 201,
         'NB_MAX_TRAIN_STEP': 10000,
         
         'TEST': False,
@@ -86,9 +167,9 @@ PARAM_SET = {
         'NB_TEST_EPISODE': 10,
         'NB_MAX_TEST_STEP': 10000,
         
-        'LR': 1e-3,
+        'LR': 1e-5,
         'WEIGHT_DECAY': 1e-2,
-        'BATCH_SIZE': 64,
+        'BATCH_SIZE': 16,
 
         'UPDATE_METHOD': 'soft',
         'UPDATE_TARGET_EVERY': 80,
@@ -96,12 +177,172 @@ PARAM_SET = {
 
         'GAMMA': 0.999,
         
-        'BUFFER_SIZE': 100000,
+        'BUFFER_SIZE': 10000,
 
         'GREED_METHOD': 'epsilon',
         'EPSILON_START': 1.0,
         'EPSILON_END': 0.05,
-        'EPSILON_DECAY': 0.99977,
+        'EPSILON_DECAY': 0.9997,
+        'TAU': 1,
+        
+        'STACK_FRAME': True,
+        'STACK_SIZE': 4
+    },
+    
+    'VizdoomTakeCover-v0_Test' : {
+        'ENV': 'VizdoomTakeCover-v0',
+        'RESOLUTION': [60, 80],
+        'LAST_STEP': 100000,
+        'WEIGHT_FILE': 'best_networks/VizdoomTakeCover-v0_Best.pt',
+        'MONITOR': True,
+        'USE_GPU': False,
+        
+        'TRAIN': False,
+        'RENDER_TRAIN': True,
+        'NB_TRAIN_EPISODE': 100,
+        'NB_MAX_TRAIN_STEP': 10000,
+        
+        'TEST': True,
+        'RENDER_TEST': True,
+        'NB_TEST_EPISODE': 100,
+        'NB_MAX_TEST_STEP': 10000,
+        
+        'LR': 1e-4,
+        'WEIGHT_DECAY': 1e-2,
+        'BATCH_SIZE': 16,
+
+        'UPDATE_METHOD': 'soft',
+        'UPDATE_TARGET_EVERY': 80,
+        'ALPHA': 0.01,
+
+        'GAMMA': 0.999,
+        
+        'BUFFER_SIZE': 10000,
+
+        'GREED_METHOD': 'epsilon',
+        'EPSILON_START': 0.05,
+        'EPSILON_END': 0.05,
+        'EPSILON_DECAY': 1.0,
+        'TAU': 1,
+        
+        'STACK_FRAME': True,
+        'STACK_SIZE': 4
+    },
+    
+    'VizdoomCorridor-v0_Train' : {
+        'ENV': 'VizdoomCorridor-v0',
+        'RESOLUTION': [60, 80],
+        'LAST_STEP': 2100,
+        'WEIGHT_FILE': None,
+        'MONITOR': True,
+        'USE_GPU': True,
+        
+        'TRAIN': True,
+        'RENDER_TRAIN': False,
+        'NB_TRAIN_EPISODE': 201,
+        'NB_MAX_TRAIN_STEP': 10000,
+        
+        'TEST': False,
+        'RENDER_TEST': True,
+        'NB_TEST_EPISODE': 10,
+        'NB_MAX_TEST_STEP': 10000,
+        
+        'LR': 1e-5,
+        'WEIGHT_DECAY': 1e-2,
+        'BATCH_SIZE': 16,
+
+        'UPDATE_METHOD': 'soft',
+        'UPDATE_TARGET_EVERY': 80,
+        'ALPHA': 0.01,
+
+        'GAMMA': 0.1,
+        
+        'BUFFER_SIZE': 10000,
+
+        'GREED_METHOD': 'epsilon',
+        'EPSILON_START': 1.0,
+        'EPSILON_END': 0.05,
+        'EPSILON_DECAY': 0.9991,
+        'TAU': 1,
+        
+        'STACK_FRAME': True,
+        'STACK_SIZE': 4
+    },
+    
+    'VizdoomCorridor-v0_Test' : {
+        'ENV': 'VizdoomCorridor-v0',
+        'RESOLUTION': [60, 80],
+        'LAST_STEP': 2100,
+        'WEIGHT_FILE': 'best_networks/VizdoomCorridor-v0_Best.pt',
+        'MONITOR': True,
+        'USE_GPU': False,
+        
+        'TRAIN': False,
+        'RENDER_TRAIN': True,
+        'NB_TRAIN_EPISODE': 100,
+        'NB_MAX_TRAIN_STEP': 10000,
+        
+        'TEST': True,
+        'RENDER_TEST': True,
+        'NB_TEST_EPISODE': 100,
+        'NB_MAX_TEST_STEP': 10000,
+        
+        'LR': 1e-4,
+        'WEIGHT_DECAY': 1e-2,
+        'BATCH_SIZE': 16,
+
+        'UPDATE_METHOD': 'soft',
+        'UPDATE_TARGET_EVERY': 80,
+        'ALPHA': 0.01,
+
+        'GAMMA': 0.99,
+        
+        'BUFFER_SIZE': 100000,
+
+        'GREED_METHOD': 'epsilon',
+        'EPSILON_START': 0.05,
+        'EPSILON_END': 0.05,
+        'EPSILON_DECAY': 1.0, 
+        'TAU': 1,
+        
+        'STACK_FRAME': True,
+        'STACK_SIZE': 4
+    },
+    
+    'VizdoomCorridor-v0_Kill' : {
+        'ENV': 'VizdoomCorridor-v0',
+        'RESOLUTION': [60, 80],
+        'LAST_STEP': 2100,
+        'WEIGHT_FILE': 'best_networks/VizdoomCorridor-v0_Kill.pt',
+        'MONITOR': True,
+        'USE_GPU': False,
+        
+        'TRAIN': False,
+        'RENDER_TRAIN': True,
+        'NB_TRAIN_EPISODE': 100,
+        'NB_MAX_TRAIN_STEP': 10000,
+        
+        'TEST': True,
+        'RENDER_TEST': True,
+        'NB_TEST_EPISODE': 100,
+        'NB_MAX_TEST_STEP': 10000,
+        
+        'LR': 1e-4,
+        'WEIGHT_DECAY': 1e-2,
+        'BATCH_SIZE': 16,
+
+        'UPDATE_METHOD': 'soft',
+        'UPDATE_TARGET_EVERY': 80,
+        'ALPHA': 0.01,
+
+        'GAMMA': 0.99,
+        
+        'BUFFER_SIZE': 100000,
+
+        'GREED_METHOD': 'epsilon',
+        'EPSILON_START': 0.05,
+        'EPSILON_END': 0.05,
+        'EPSILON_DECAY': 1.0, 
         'TAU': 1,
         
         'STACK_FRAME': True,
@@ -110,6 +351,7 @@ PARAM_SET = {
     
     'VizdoomBasic-v0_Train' : {
         'ENV': 'VizdoomBasic-v0',
+        'RESOLUTION': [120, 160],
         'LAST_STEP': 300,
         'WEIGHT_FILE': None,
         'MONITOR': False,
@@ -150,7 +392,8 @@ PARAM_SET = {
     'VizdoomBasic-v0_Test' : {
         'ENV': 'VizdoomBasic-v0',
         'LAST_STEP': 300,
-        'WEIGHT_FILE': 'best_networks/VizdoomBasic-v0_400.pt',
+        'WEIGHT_FILE': 'best_networks/VizdoomBasic-v0_Best.pt',
+        'RESOLUTION': [120, 160],
         'MONITOR': True,
         'USE_GPU': False,
         
@@ -176,10 +419,10 @@ PARAM_SET = {
         
         'BUFFER_SIZE': 100000,
 
-        'GREED_METHOD': 'none',
-        'EPSILON_START': 1.0,
-        'EPSILON_END': 0.,
-        'EPSILON_DECAY': 0.99977, 
+        'GREED_METHOD': 'epsilon',
+        'EPSILON_START': 0.05,
+        'EPSILON_END': 0.05,
+        'EPSILON_DECAY': 1.0, 
         'TAU': 1,
         
         'STACK_FRAME': False,
@@ -204,12 +447,18 @@ class CartPoleDQNAgent(DQNAgent):
     
 class VizDoomDQNAgent(DQNAgent):
     def _preprocess_state(self, state):
-        return preprocess_vizdoom(state, [120, 160])
+        return preprocess_vizdoom(state, getParam('RESOLUTION'))
 
     def _build_model(self, out_features):
+        # Inspiré de : https://pytorch.org/tutorials/intermediate/reinforcement_q_learning.html
+    
         in_features = 1
         if getParam('STACK_FRAME'):
             in_features = getParam('STACK_SIZE')
+    
+        convw = conv2d_size_out(conv2d_size_out(conv2d_size_out(getParam('RESOLUTION')[0])))
+        convh = conv2d_size_out(conv2d_size_out(conv2d_size_out(getParam('RESOLUTION')[1])))
+        linear_input_size = convw * convh * 32
     
         self.model = torch.nn.Sequential(
             torch.nn.Conv2d(in_features, 16, kernel_size=5, stride=2),
@@ -222,7 +471,7 @@ class VizDoomDQNAgent(DQNAgent):
             torch.nn.BatchNorm2d(32),
             torch.nn.ReLU(),
             torch.nn.Flatten(),
-            torch.nn.Linear(6528, 256),
+            torch.nn.Linear(linear_input_size, 256),
             torch.nn.ReLU(),
             torch.nn.Linear(256, out_features)
         )
@@ -256,15 +505,20 @@ def preprocess_vizdoom(state, resolution):
         
         return img
         
+def conv2d_size_out(size, kernel_size = 5, stride = 2):
+    return (size - (kernel_size - 1) - 1) // stride  + 1
         
         
         
         
+
+# Boucle de train
 def train(env, agent):
     total_steps = 0.
     episode_lengths = []
     episode_rewards = []
 
+    # Itere les episodes
     reward, done = 0, False
     for ep in range(getParam('NB_TRAIN_EPISODE')):
         state = env.reset()
@@ -275,6 +529,8 @@ def train(env, agent):
         sum_loss = 0.
         sum_step = 0.
         sum_reward = 0.
+        
+        # Itere les étapes
         for step in range(getParam('NB_MAX_TRAIN_STEP')):
             if getParam('RENDER_TRAIN'):
                 env.render()
@@ -285,6 +541,9 @@ def train(env, agent):
             if getParam('STACK_FRAME'):
                 next_state = state[1:] + [next_state]
             
+            # Si on est sur la dernière étape possible
+            # Pour pas avoir de 'done' à True avec une run perfect
+            # On skip
             if step+1 != getParam('LAST_STEP'):
                 agent.add_interaction(state, action, next_state, reward, done)
             
@@ -310,16 +569,24 @@ def train(env, agent):
         print('  |  Total steps: ', total_steps, sep='', end='')
         print()
         
-    plt.scatter(list(range(getParam('NB_TRAIN_EPISODE'))), episode_rewards)
+    # Affichage du nuage de point final
+    plt.scatter(list(range(getParam('NB_TRAIN_EPISODE'))), episode_rewards, label='Données')
+    mean = sum(episode_rewards)/float(getParam('NB_TRAIN_EPISODE'))
+    plt.plot(list(range(getParam('NB_TRAIN_EPISODE'))), [mean]*getParam('NB_TRAIN_EPISODE'), label='Moyenne (' + str(mean) + ')', linestyle='--')
+    plt.legend(loc='lower right', framealpha=1).get_frame().set_edgecolor('black')
+    plt.xlabel('Numéro épisode')
+    plt.ylabel('Somme récompenses')
     plt.show()
         
         
-        
+
+# Boucle de test
 def test(env, agent):
     total_steps = 0.
     episode_lengths = []
     episode_rewards = []
 
+    # Itere les episodes
     reward, done = 0, False
     for ep in range(getParam('NB_TEST_EPISODE')):
         state = env.reset()
@@ -329,6 +596,8 @@ def test(env, agent):
         
         sum_step = 0.
         sum_reward = 0.
+        
+        # Itere les étapes
         for step in range(getParam('NB_MAX_TEST_STEP')):
             if getParam('RENDER_TEST'):
                 env.render()
@@ -356,7 +625,15 @@ def test(env, agent):
         print('  |  Total steps: ', total_steps, sep='', end='')
         print()
         
-    plt.scatter(list(range(getParam('NB_TEST_EPISODE'))), episode_rewards)
+    
+    
+    # Affichage du nuage de point final
+    plt.scatter(list(range(getParam('NB_TEST_EPISODE'))), episode_rewards, label='Données')
+    mean = sum(episode_rewards)/float(getParam('NB_TEST_EPISODE'))
+    plt.plot(list(range(getParam('NB_TEST_EPISODE'))), [mean]*getParam('NB_TEST_EPISODE'), label='Moyenne (' + str(mean) + ')', linestyle='--')
+    plt.legend(loc='lower right', framealpha=1).get_frame().set_edgecolor('black')
+    plt.xlabel('Numéro épisode')
+    plt.ylabel('Somme récompenses')
     plt.show()
         
         
@@ -398,6 +675,7 @@ if __name__ == '__main__':
             env = gym.wrappers.Monitor(env, directory='./replay/vizdoom', video_callable=lambda x: x%10 == 0, force=True)
         env.seed(0)
     
+        # Creation de l'agent
         agent = VizDoomDQNAgent(
             env.action_space.n,
             getParam('LR'),
