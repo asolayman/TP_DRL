@@ -69,7 +69,7 @@ from agent import DQNAgent
 # 'VizdoomCorridor-v0_Kill'
 # 'VizdoomCorridor-v0_Train'
 # 'VizdoomCorridor-v0_Test'
-USED_SET = 'CartPole-v1_Test'
+USED_SET = 'VizdoomCorridor-v0_Test'
 PARAM_SET = {
     'CartPole-v1_Train' : {
         'ENV': 'CartPole-v1',
@@ -647,7 +647,7 @@ if __name__ == '__main__':
         # Creation de l'environnement
         env = gym.make(getParam('ENV'))
         if getParam('MONITOR'):
-            env = gym.wrappers.Monitor(env, directory='./replay/cartpole', video_callable=lambda x: x%10 == 0, force=True)
+            env = gym.wrappers.Monitor(env, directory='./replay/cartpole', video_callable=lambda x: x%1 == 0, force=True)
         env.seed(0)
     
         # Creation de l'agent
@@ -672,7 +672,7 @@ if __name__ == '__main__':
         # Creation de l'environnement
         env = gym.make(getParam('ENV'), depth=True, labels=True, position=True, health=True)
         if getParam('MONITOR'):
-            env = gym.wrappers.Monitor(env, directory='./replay/vizdoom', video_callable=lambda x: x%10 == 0, force=True)
+            env = gym.wrappers.Monitor(env, directory='./replay/vizdoom', video_callable=lambda x: x%1 == 0, force=True)
         env.seed(0)
     
         # Creation de l'agent
