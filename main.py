@@ -647,7 +647,7 @@ if __name__ == '__main__':
         # Creation de l'environnement
         env = gym.make(getParam('ENV'))
         if getParam('MONITOR'):
-            env = gym.wrappers.Monitor(env, directory='./replay/cartpole', video_callable=lambda x: x%1 == 0, force=True)
+            env = gym.wrappers.Monitor(env, directory='./replay/cartpole', video_callable=lambda x: x%10 == 0, force=True)
         env.seed(0)
     
         # Creation de l'agent
@@ -672,7 +672,7 @@ if __name__ == '__main__':
         # Creation de l'environnement
         env = gym.make(getParam('ENV'), depth=True, labels=True, position=True, health=True)
         if getParam('MONITOR'):
-            env = gym.wrappers.Monitor(env, directory='./replay/vizdoom', video_callable=lambda x: x%1 == 0, force=True)
+            env = gym.wrappers.Monitor(env, directory='./replay/vizdoom', video_callable=lambda x: x%10 == 0, force=True)
         env.seed(0)
     
         # Creation de l'agent
