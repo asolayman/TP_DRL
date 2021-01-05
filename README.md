@@ -10,7 +10,8 @@ Solayman AYOUBI p1608583
 sudo apt install cmake libboost-all-dev libsdl2-dev libfreetype6-dev libgl1-mesa-dev libglu1-mesa-dev libpng-dev libjpeg-dev libbz2-dev libfluidsynth-dev libgme-dev libopenal-dev zlib1g-dev timidity tar nasm wget ffmpeg
 ```
 Attention: On utilise une version custom de vizdoomgym pour régler le problème du wrapper d'enregistrement  
-par conséquent il faut bien installer la version de vizdoomgym indiquer dans le fichier requirements.txt
+par conséquent il faut bien installer la version de vizdoomgym indiquer dans le fichier requirements.txt.
+Le code reste éxecutable avec la version de base de vizdoomgym mais produira un warning
 
 ```sh
 pip3 install -r requirements.txt
