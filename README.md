@@ -36,7 +36,7 @@ Valeurs possibles pour USED_SET :
 - 'VizdoomCorridor-v0_Train'
 - 'VizdoomCorridor-v0_Test'
 
-Les valeurs finissants par "\_Test" ou "\_Kill" sont celles à utiliser pour reproduire ce qui est dans les vidéos (les vidéos sont les meilleurs / plus interessants sur episodes plusieurs).
+Les valeurs finissants par "\_Test" ou "\_Kill" sont celles à utiliser pour reproduire ce qui est dans les vidéos (les vidéos sont les meilleurs / plus interessants episodes sur 100).
 
 Les tous les jeux d'hyper-paramètres ayant permis de faire les vidéos (que ça soit le train, ou le test) sont dans PARAM_SET (`main.py`, L.73).
 
@@ -46,6 +46,6 @@ Les tous les jeux d'hyper-paramètres ayant permis de faire les vidéos (que ça
 - `best\_networks` contient tout les réseaux de neurones pré entraînés.
 - `best\_replays` contient tout les enregistrements _démo_ des différents réseaux de neurones.
 - `network` est le dossier où le réseau courant est sauvegardé suite à une exécution.
-- `replay` est le dossier où les replays courants sont sauvegardé suite à une exécution.
+- `replay` est le dossier où les replays courants sont sauvegardés suite à une exécution.
 - `agent.py` contient la classe avec les algorithmes liés au DQN.
 - `main.py` **contient en haut du fichier tous les hyper-paramètres des entraînements et phases de tests (Si vous voulez le détail des valeurs des hyper-paramètres, et pour la reproductibilité)**, ainsi que les boucles d'itération sur les environnements.
